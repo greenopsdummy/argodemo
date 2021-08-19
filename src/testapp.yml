@@ -38,6 +38,7 @@ metadata:
 spec:
   replicas: 1
   revisionHistoryLimit: 3
+  progressDeadlineSeconds: 10
   selector:
     matchLabels:
       app: degradingapp
