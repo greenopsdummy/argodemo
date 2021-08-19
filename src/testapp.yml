@@ -51,6 +51,7 @@ spec:
       labels:
         app: degradingapp
     spec:
+      terminationGracePeriodSeconds: 2
       containers:
       - image: atlasdegradingapp
         name: degradingapp
