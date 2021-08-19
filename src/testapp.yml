@@ -31,45 +31,67 @@ spec:
   selector:
     app: testapp
 ---
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: degradingapp
-spec:
-  replicas: 1
-  revisionHistoryLimit: 3
-  progressDeadlineSeconds: 10
-  strategy:
-    rollingUpdate:
-      maxUnavailable: 0
-  selector:
-    matchLabels:
-      app: degradingapp
-  template:
-    metadata:
-      labels:
-        app: degradingapp
-    spec:
-      containers:
-      - image: atlasdegradingapp
-        name: degradingapp
-        imagePullPolicy: Never
-        ports:
-        - containerPort: 5000
-        readinessProbe:
-          httpGet:
-            path: /readiness
-            port: 5000
-          initialDelaySeconds: 2
-          periodSeconds: 1
----
 apiVersion: v1
-kind: Service
+kind: Pod
 metadata:
-  name: degradingapp
+  labels:
+    test: liveness
+  name: liveness-exec
 spec:
-  ports:
-  - port: 5000
-    targetPort: 5000
-  selector:
-    app: degradingapp
+  containers:
+  - name: liveness
+    image: k8s.gcr.io/busybox
+    args:
+    - /bin/sh
+    - -c
+    - touch /tmp/healthy; sleep 30; rm -rf /tmp/healthy; sleep 600
+    livenessProbe:
+      exec:
+        command:
+        - cat
+        - /tmp/healthy
+      initialDelaySeconds: 5
+      periodSeconds: 5
+# ---
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: degradingapp
+# spec:
+#   replicas: 1
+#   revisionHistoryLimit: 3
+#   progressDeadlineSeconds: 10
+#   strategy:
+#     rollingUpdate:
+#       maxUnavailable: 0
+#   selector:
+#     matchLabels:
+#       app: degradingapp
+#   template:
+#     metadata:
+#       labels:
+#         app: degradingapp
+#     spec:
+#       containers:
+#       - image: atlasdegradingapp
+#         name: degradingapp
+#         imagePullPolicy: Never
+#         ports:
+#         - containerPort: 5000
+#         readinessProbe:
+#           httpGet:
+#             path: /readiness
+#             port: 5000
+#           initialDelaySeconds: 2
+#           periodSeconds: 1
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: degradingapp
+# spec:
+#   ports:
+#   - port: 5000
+#     targetPort: 5000
+#   selector:
+#     app: degradingapp
