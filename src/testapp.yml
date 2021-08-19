@@ -42,7 +42,7 @@ spec:
   minReadySeconds: 5
   strategy:
     rollingUpdate:
-      maxUnavailable: 0
+      maxUnavailable: 1
   selector:
     matchLabels:
       app: degradingapp
