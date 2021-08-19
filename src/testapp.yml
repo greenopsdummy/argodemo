@@ -47,12 +47,14 @@ spec:
       labels:
         app: degradingapp
     spec:
+      progressDeadlineSeconds: 10
       containers:
       - image: atlasdegradingapp
         name: degradingapp
         imagePullPolicy: Never
         ports:
         - containerPort: 5000
+        progressDeadlineSeconds: 10
         readinessProbe:
           httpGet:
             path: /readiness
