@@ -38,7 +38,7 @@ metadata:
 spec:
   replicas: 1
   revisionHistoryLimit: 3
-  progressDeadlineSeconds: 25
+  progressDeadlineSeconds: 10
   strategy:
     rollingUpdate:
       maxUnavailable: 0
@@ -60,7 +60,7 @@ spec:
           httpGet:
             path: /readiness
             port: 5000
-          initialDelaySeconds: 15
+          initialDelaySeconds: 2
           periodSeconds: 1
 ---
 apiVersion: v1
