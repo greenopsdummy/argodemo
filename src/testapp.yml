@@ -20,70 +20,53 @@ spec:
         ports:
         - containerPort: 5000
 ---
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: testapp
-# spec:
-#   ports:
-#   - port: 5000
-#     targetPort: 5000
-#   selector:
-#     app: testapp
-# ---
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata:
-#   name: degradingapp
-# spec:
-#   replicas: 1
-#   revisionHistoryLimit: 3
-#   progressDeadlineSeconds: 15
-#   selector:
-#     matchLabels:
-#       app: degradingapp
-#   template:
-#     metadata:
-#       labels:
-#         app: degradingapp
-#     spec:
-#       restartPolicy: Never
-#       containers:
-#       - image: atlasdegradingapp
-#         name: degradingapp
-#         imagePullPolicy: Never
-#         ports:
-#         - containerPort: 5000
-# ---
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: degradingapp
-# spec:
-#   ports:
-#   - port: 5000
-#     targetPort: 5000
-#   selector:
-#     app: degradingapp
 apiVersion: v1
-kind: Pod
+kind: Service
 metadata:
-  labels:
-    test: liveness
-  name: liveness-exec
+  name: testapp
 spec:
-  restartPolicy: Never
-  containers:
-  - name: liveness
-    image: k8s.gcr.io/busybox
-    args:
-    - /bin/sh
-    - -c
-    - touch /tmp/healthy; sleep 30; rm -rf /tmp/healthy; sleep 15
-    livenessProbe:
-      exec:
-        command:
-        - cat
-        - /tmp/healthy
-      initialDelaySeconds: 5
-      periodSeconds: 5
+  ports:
+  - port: 5000
+    targetPort: 5000
+  selector:
+    app: testapp
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: degradingapp
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  progressDeadlineSeconds: 15
+  selector:
+    matchLabels:
+      app: degradingapp
+  template:
+    metadata:
+      labels:
+        app: degradingapp
+    spec:
+      containers:
+      - image: atlasdegradingapp
+        name: degradingapp
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 5000
+        readinessProbe:
+          httpGet:
+            path: /readiness
+            port: 5000
+          initialDelaySeconds: 10
+          periodSeconds: 2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: degradingapp
+spec:
+  ports:
+  - port: 5000
+    targetPort: 5000
+  selector:
+    app: degradingapp
