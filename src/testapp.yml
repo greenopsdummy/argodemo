@@ -31,7 +31,7 @@ spec:
   selector:
     app: testapp
 ---
-apiVersion: "atlas.demo.com/v1"
+apiVersion: atlas.demo.com/v1
 kind: DegradingApp
 metadata:
   name: degradingappexample
