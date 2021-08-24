@@ -31,23 +31,23 @@ spec:
   selector:
     app: testapp
 ---
-# apiVersion: atlas.demo.com/v1
-# kind: DegradingApp
-# metadata:
-#   name: degradingappexample
-# spec:
-#   image: degradingapp
-#   replicas: 3
-apiVersion: batch/v1
-kind: Job
+apiVersion: atlas.demo.com/v1
+kind: DegradingApp
 metadata:
-  name: piii
+  name: degradingappexample
 spec:
-  template:
-    spec:
-      containers:
-      - name: piii
-        image: perl
-        command: ["perl",  "-Mbignum=bpi", "-wle", "print bpi(2000)"]
-      restartPolicy: Never
-  backoffLimit: 3
+  image: degradingapp
+  replicas: 3
+# apiVersion: batch/v1
+# kind: Job
+# metadata:
+#   name: piii
+# spec:
+#   template:
+#     spec:
+#       containers:
+#       - name: piii
+#         image: perl
+#         command: ["perl",  "-Mbignum=bpi", "-wle", "print bpi(2000)"]
+#       restartPolicy: Never
+#   backoffLimit: 3
