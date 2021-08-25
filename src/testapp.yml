@@ -30,14 +30,14 @@ spec:
     targetPort: 5000
   selector:
     app: testapp
----
-apiVersion: atlas.demo.com/v1
-kind: DegradingApp
-metadata:
-  name: degradingappexample
-spec:
-  image: degradingapp
-  replicas: 3
+# ---
+# apiVersion: atlas.demo.com/v1
+# kind: DegradingApp
+# metadata:
+#   name: degradingappexample
+# spec:
+#   image: degradingapp
+#   replicas: 3
 # apiVersion: batch/v1
 # kind: Job
 # metadata:
