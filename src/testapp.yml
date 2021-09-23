@@ -14,7 +14,7 @@ spec:
         app: testapp
     spec:
       containers:
-      - image: atlastestapp
+      - image: 1mihirpandya/testapp
         name: testapp
         imagePullPolicy: Never
         ports:
