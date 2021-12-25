@@ -19,17 +19,17 @@ spec:
 #         imagePullPolicy: Never
         ports:
         - containerPort: 5000
-# ---
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: testapp
-# spec:
-#   ports:
-#   - port: 5000
-#     targetPort: 5000
-#   selector:
-#     app: testapp
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: testapp
+spec:
+  ports:
+  - port: 5000
+    targetPort: 5000
+  selector:
+    app: testapp
 # ---
 # apiVersion: atlas.demo.com/v1
 # kind: DegradingApp
