@@ -3,6 +3,7 @@ kind: Rollout                     # Changed from Deployment
 metadata:
   name: rollouts-demo
 spec:
+  replicas: 5
   selector:
     matchLabels:
       app: rollouts-demo
