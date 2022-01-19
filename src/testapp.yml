@@ -36,6 +36,7 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
