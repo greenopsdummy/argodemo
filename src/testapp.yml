@@ -1,41 +1,26 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Rollout
+apiVersion: argoproj.io/v1alpha1  # Changed from apps/v1
+kind: Rollout                     # Changed from Deployment
 metadata:
-  name: rollout-ref-deployment
+  name: rollouts-demo
 spec:
-  replicas: 5
-  workloadRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: rollout-ref-deployment
-  strategy:
-    canary:
-      steps:
-        - setWeight: 20
-        - pause: {duration: 10s}
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
-    app.kubernetes.io/instance: rollout-canary
-  name: rollout-ref-deployment
-spec:
-  replicas: 0
   selector:
     matchLabels:
-      app: rollout-ref-deployment
+      app: rollouts-demo
   template:
     metadata:
       labels:
-        app: rollout-ref-deployment
+        app: rollouts-demo
     spec:
       containers:
-        - name: rollouts-demo
-          image: argoproj/rollouts-demo:yellow
-          imagePullPolicy: Always
-          ports:
-            - containerPort: 8080
+      - name: rollouts-demo
+        image: argoproj/rollouts-demo:blue
+        ports:
+        - containerPort: 8080
+  strategy:
+    canary:                        # Changed from rollingUpdate or recreate
+      steps:
+      - setWeight: 20
+      - pause: {}
 ---
 apiVersion: apps/v1
 kind: Deployment
