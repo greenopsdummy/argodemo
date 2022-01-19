@@ -1,33 +1,41 @@
-apiVersion: argoproj.io/v1alpha1  # Changed from apps/v1
-kind: Rollout                     # Changed from Deployment
+apiVersion: argoproj.io/v1alpha1               # Create a rollout resource
+kind: Rollout
 metadata:
-  name: rollouts-demo
+  name: rollout-ref-deployment
 spec:
   replicas: 5
+  workloadRef:                                 # Reference an existing Deployment using workloadRef field
+    apiVersion: apps/v1
+    kind: Deployment
+    name: rollout-ref-deployment
+  strategy:
+    canary:
+      steps:
+        - setWeight: 20
+        - pause: {duration: 10s}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/instance: rollout-canary
+  name: rollout-ref-deployment
+spec:
+  replicas: 0                                  # Scale down existing deployment
   selector:
     matchLabels:
-      app: rollouts-demo
+      app: rollout-ref-deployment
   template:
     metadata:
       labels:
-        app: rollouts-demo
+        app: rollout-ref-deployment
     spec:
       containers:
-      - name: rollouts-demo
-        image: argoproj/rollouts-demo:blue
-        ports:
-        - containerPort: 8080
-  strategy:
-    canary:                        # Changed from rollingUpdate or recreate
-      steps:
-      - setWeight: 20
-      - pause: {duration: 10}
-      - setWeight: 40
-      - pause: {duration: 10}
-      - setWeight: 60
-      - pause: {duration: 10}
-      - setWeight: 80
-      - pause: {duration: 10}
+        - name: rollouts-demo
+          image: argoproj/rollouts-demo:blue
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
 ---
 apiVersion: apps/v1
 kind: Deployment
